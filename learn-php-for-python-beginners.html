@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PHP for Python Developers</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/languages/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/languages/php.min.js"></script>
+<style>
+:root {
+  --bg: #F1F5F9;
+  --surface: #FFFFFF;
+  --text-primary: #1E293B;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+  --python: #3776AB;
+  --php: #777BB3;
+  --accent: #F59E0B;
+  --border: #E2E8F0;
+  --radius: 6px;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text-primary);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 48px 24px 96px;
+}
+
+/* Header */
+.header {
+  margin-bottom: 48px;
+}
+.header h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+.header h1 .python-word { color: var(--python); }
+.header h1 .php-word { color: var(--php); }
+.header .subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  text-wrap: balance;
+}
+.header .meta {
+  margin-top: 12px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+.header .meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.lang-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.lang-dot.py { background: var(--python); }
+.lang-dot.php { background: var(--php); }
+
+/* Intro */
+.intro {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  margin-bottom: 48px;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+.intro strong { color: var(--text-primary); }
+.intro code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--bg);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* TOC */
+.toc {
+  margin-bottom: 48px;
+}
+.toc h2 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.toc nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.toc a {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  transition: all 0.15s;
+}
+.toc a:hover {
+  border-color: var(--python);
+  color: var(--python);
+}
+
+/* Section */
+.section {
+  margin-bottom: 48px;
+}
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
+.section-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.section-header .section-note {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.section-desc {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+/* Comparison grid */
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.comparison-col {
+  position: relative;
+  min-width: 0;
+}
+.comparison-col:first-child {
+  border-right: 1px solid var(--border);
+}
+.lang-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 6px 14px;
+  color: #fff;
+}
+.lang-label.py { background: var(--python); }
+.lang-label.php { background: var(--php); }
+.comparison-col pre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  font-family: var(--font-mono);
+  background: var(--surface);
+  tab-size: 4;
+}
+.comparison-col pre code {
+  background: none !important;
+  padding: 0 !important;
+  font-family: var(--font-mono);
+}
+.hljs { background: var(--surface) !important; }
+
+/* Single code block */
+.code-block {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.code-block pre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  font-family: var(--font-mono);
+  background: var(--surface);
+}
+.code-block pre code {
+  background: none !important;
+  padding: 0 !important;
+}
+
+/* Tip / callout */
+.tip {
+  background: #FFFBEB;
+  border-left: 3px solid var(--accent);
+  padding: 12px 16px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+.tip strong { color: var(--text-primary); }
+.tip code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: #FEF3C7;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* Mapping table */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  background: var(--surface);
+}
+thead th {
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody td:first-child { color: var(--python); }
+tbody td:last-child { color: var(--php); }
+tbody td:not(:first-child):not(:last-child) { color: var(--text-secondary); font-family: var(--font-sans); }
+
+/* Responsive */
+@media (max-width: 700px) {
+  .container { padding: 32px 16px 64px; }
+  .header h1 { font-size: 1.625rem; }
+  .comparison { grid-template-columns: 1fr; }
+  .comparison-col:first-child { border-right: none; }
+  .comparison-col:first-child pre { border-bottom: 1px solid var(--border); }
+}
+
+/* Print */
+@media print {
+  body { background: #fff; }
+  .container { max-width: 100%; padding: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<header class="header">
+  <h1><span class="python-word">Python</span> → <span class="php-word">PHP</span></h1>
+  <p class="subtitle">A practical guide for Python developers learning PHP</p>
+  <div class="meta">
+    <span><span class="lang-dot py"></span> Python 3</span>
+    <span><span class="lang-dot php"></span> PHP 8+</span>
+  </div>
+</header>
+
+<div class="intro">
+  <strong>You know Python. Now you need PHP.</strong> Maybe it's Laravel. Maybe it's a WordPress gig. Maybe you just want another tool in the belt. The syntax looks different — <code>$</code> everywhere, semicolons, arrows instead of dots — but the concepts map directly. This guide skips the "what is a variable" intro and goes straight to the translation table.
+</div>
+
+<nav class="toc">
+  <h2>Sections</h2>
+  <nav>
+    <a href="#syntax">Syntax</a>
+    <a href="#strings">Strings</a>
+    <a href="#arrays">Arrays &amp; Dicts</a>
+    <a href="#control">Control Flow</a>
+    <a href="#functions">Functions</a>
+    <a href="#oop">Classes</a>
+    <a href="#fio">File I/O</a>
+    <a href="#errors">Errors</a>
+    <a href="#map">Function Map</a>
+    <a href="#web">Web Context</a>
+  </nav>
+</nav>
+
+<!-- ============================== -->
+<section class="section" id="syntax">
+<div class="section-header">
+  <h2>Basic Syntax</h2>
+  <span class="section-note">variables, comments, types</span>
+</div>
+<div class="section-desc">
+  Python uses indentation to define blocks; PHP uses braces. PHP variables always start with <code>$</code> and don't need a keyword to declare. Both are dynamically typed.
+</div>
+
+<div class="comparison">
+  <div class="comparison-col">
+    <div class="lang-label py">Python</div>
+    <pre><code class="language-python"># This is a comment
+name = "Alice"
+age = 30
+is_admin = True
+price = 49.99
+items = None
+
+# Type hint (optional)
+def greet(n: str) -> str:
+    return f"Hello, {n}"
+</code></pre>
+  </div>
+  <div class="comparison-col">
+    <div class="lang-label php">PHP</div>
+    <pre><code class="language-php">&#x3C;?php
+// This is a comment
+$name = "Alice";
+$age = 30;
+$isAdmin = true;
+$price = 49.99;
+$items = null;
+
+// Type hint (optional)
+function greet(string $n): string {
+    return "Hello, $n";
+}
+</code></pre>
+  </div>
+</div>
+
+<div class="tip">
+  <strong>Note:</strong> PHP files need an <code>&lt;?php</code> opening tag. The closing <code>?&gt;</code> is optional and usually omitted in pure PHP files to prevent accidental whitespace output.
+</div>
+</section>
+
+<!-- ============================== -->
+<section class="section" id="strings">
+<div class="section-header">
+  <h2>Strings</h2>
+  <span class="section-note">concatenation, interpolation, methods</span>
+</div>
+<div class="section-desc">
+  Python uses <code>.</code> for concatenation and <code>f-strings</code> for interpolation. PHP uses <code>.</code> too, and interpolates variables directly inside double-quoted strings.
+</div>
+
+<div class="comparison">
+  <div class="comparison-col">
+    <div class="lang-label py">Python</div>
+    <pre><code class="language-python"># Concatenation
+msg = "Hello, " + name
+
+# f-string interpolation
+msg = f"Hello, {name}"
+
+# Methods
+upper = "hello".upper()
+length = len("hello")
+parts = "a,b,c".split(",")
+joined = ", ".join(["a", "b"])
+</code></pre>
+  </div>
+  <div class="comparison-col">
+    <div class="lang-label php">PHP</div>
+    <pre><code class="language-php">// Concatenation
+$msg = "Hello, " . $name;
+
+// Double-quote interpolation
+$msg = "Hello, $name";
+
+// Methods
+$upper = strtoupper("hello");
+$length = strlen("hello");
+$parts = explode(",", "a,b,c");
+$joined = implode(", ", ["a", "b"]);
+</code></pre>
+  </div>
+</div>
+
+<div class="tip">
+  <strong>Watch out:</strong> PHP string functions are <em>not</em> methods on the string — they're standalone functions that take the string as the first argument. Method-style calls exist on <code>Stringable</code> objects in Laravel, but in raw PHP you use functions.
+</div>
+</section>
+
+<!-- ============================== -->
+<section class="section" id="arrays">
+<div class="section-header">
+  <h2>Arrays &amp; Dicts</h2>
+  <span class="section-note">indexed arrays, associative arrays, operations</span>
+</div>
+<div class="section-desc">
+  PHP arrays are ordered maps that serve double duty as both indexed lists and key-value stores — a single type does what Python splits between <code>list</code> and <code>dict</code>.
+</div>
+
+<div class="comparison">
+  <div class="comparison-col">
+    <div class="lang-label py">Python</div>
+    <pre><code class="language-python"># List (indexed)
+fruits = ["apple", "banana"]
+fruits.append("cherry")
+fruits[0]          # "apple"
+len(fruits)        # 3
+
+# Dict (associative)
+user = {
+    "name": "Alice",
+    "age": 30
+}
+user["email"] = "a@b.com"
+user.get("name")   # "Alice"
+</code></pre>
+  </div>
+  <div class="comparison-col">
+    <div class="lang-label php">PHP</div>
+    <pre><code class="language-php">// Indexed array
+$fruits = ["apple", "banana"];
+$fruits[] = "cherry";
+$fruits[0];          // "apple"
+count($fruits);      // 3
+
+// Associative array
+$user = [
+    "name" => "Alice",
+    "age" => 30
+];
+$user["email"] = "a@b.com";
+$user["name"];       // "Alice"
+</code></pre>
+  </div>
+</div>
+
+<div class="comparison">
+  <div class="comparison-col">
+    <div class="lang-label py">Python</div>
+    <pre><code class="language-python"># Looping
+for f in fruits:
+    print(f)
+
+for k, v in user.items():
+    print(k, v)
+
+# Membership
+if "apple" in fruits: ...
+if "name" in user: ...
+
+# Dict comprehension
+squares = {x: x**2 for x in range(5)}
+</code></pre>
+  </div>
+  <div class="comparison-col">
+    <div class="lang-label php">PHP</div>
+    <pre><code class="language-php">// Looping
+foreach ($fruits as $f) {
+    echo $f;
+}
+
+foreach ($user as $k => $v) {
+    echo "$k: $v";
+}
+
+// Membership
+if (in_array("apple", $fruits)) ...
+if (array_key_exists("name", $user)) ...
+
+// No direct comprehension equivalent
+// Use array_map / array_filter
+</code></pre>
+  </div>
+</div>
+
+<div class="tip">
+  <strong>Key difference:</strong> Python dicts are unordered (though insertion-ordered since 3.7). PHP arrays <em>are</em> ordered — the <code>=&gt;</code> arrow preserves insertion order natively. Also, <code>in_array()</code> is <em>O(n)</em> — for lookup-heavy code use <code>$array[$key]</code> with associative arrays.
+</div>
+</section>
+
+<!-- ============================== -->
+<section class="section" id="control">
+<div class="section-header">
+  <h2>Control Flow</h2>
+  <span class="section-note">if, for, while, match</span>
+</div>
+
+<div class="comparison">
+  <div class="comparison-col">
+    <div class="lang-label py">Python</div>
+    <pre><code class="language-python"># if / elif / else
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+else:
+    grade = "C"
+
+# for loop
+for i in range(5):
+    print(i)
+
+# while loop
+while x > 0:
+    x -= 1
+
+# match (3.10+)
+match status:
+    case 200: ...
+    case 404: ...
+</code></pre>
+  </div>
+  <div class="comparison-col">
+    <div class="lang-label php">PHP</div>
+    <pre><code class="language-php">// if / elseif / else
+if ($score >= 90) {
+    $grade = "A";
+} elseif ($score >= 80) {
+    $grade = "B";
+} else {
+    $grade = "C";
+}
+
+// for loop
+for ($i = 0; $i < 5; $i++) {
+    echo $i;
+}
+
+// while loop
+while ($x > 0) {
+    $x--;
+}
+
+// match (8.0+)
+$grade = match ($status) {
+    200 => ...
+    404 => ...
+};
+</code></pre>
+  </div>
+</div>
+</section>
+
+<!-- ============================== -->
+<section class="section" id="functions">
+<div class="section-header">
+  <h2>Functions</h2>
+  <span class="section-note">named, anonymous, type hints</span>
+</div>
+
+<div class="comparison">
+  <div class="comparison-col">
+    <div class="lang-label py">Python</div>
+    <pre><code class="language-python">def add(a, b):
+    return a + b
+
+# Default args
+def greet(name, prefix="Hello"):
+    return f"{prefix}, {name}"
+
+# Type hints
+def multiply(x: int, y: int) -> int:
+    return x * y
+
+# Lambda
+square = lambda x: x ** 2
+
+# *args / **kwargs
+def log(*items, **opts):
+    print(items, opts)
+</code></pre>
+  </div>
+  <div class="comparison-col">
+    <div class="lang-label php">PHP</div>
+    <pre><code class="language-php">function add($a, $b) {
+    return $a + $b;
+}
+
+// Default args
+function greet($name, $prefix = "Hello") {
+    return "$prefix, $name";
+}
+
+// Type hints
+function multiply(int $x, int $y): int {
+    return $x * $y;
+}
+
+// Arrow fn / Closure
+$square = fn($x) => $x ** 2;
+
+// Variadic args
+function log(...$items) {
+    var_dump($items);
+}
+
+// Named args (PHP 8+ call-site feature,
+// no **kwargs equivalent)
+log(items: ["a"], prefix: "x");
+</code></pre>
+  </div>
+</div>
+</section>
+
+<!-- ============================== -->
+<section class="section" id="oop">
+<div class="section-header">
+  <h2>Classes &amp; Objects</h2>
+  <span class="section-note">constructor, inheritance, visibility</span>
+</div>
+
+<div class="comparison">
+  <div class="comparison-col">
+    <div class="lang-label py">Python</div>
+    <pre><code class="language-python">class User:
+    def __init__(self, name, email):
+        self.name = name
+        self.email = email
+
+    def say_hello(self):
+        return f"Hi, I'm {self.name}"
+
+class Admin(User):
+    def __init__(self, name, email, role):
+        super().__init__(name, email)
+        self.role = role
+
+user = User("Alice", "a@b.com")
+print(user.say_hello())
+</code></pre>
+  </div>
+  <div class="comparison-col">
+    <div class="lang-label php">PHP</div>
+    <pre><code class="language-php">class User
+{
+    public function __construct(
+        public string $name,
+        public string $email
+    ) {}
+
+    public function sayHello(): string
+    {
+        return "Hi, I'm {$this->name}";
+    }
+}
+
+class Admin extends User
+{
+    public function __construct(
+        string $name,
+        string $email,
+        public string $role
+    ) {
+        parent::__construct($name, $email);
+    }
+}
+
+$user = new User("Alice", "a@b.com");
+echo $user->sayHello();
+</code></pre>
+  </div>
+</div>
+
+<div class="tip">
+  <strong>Constructor promotion:</strong> PHP 8.0+ lets you declare and assign properties directly in the constructor signature — similar to Python dataclasses. Visibility (<code>public</code>, <code>protected</code>, <code>private</code>) is explicit and enforced.
+</div>
+</section>
+
+<!-- ============================== -->
+<section class="section" id="fio">
+<div class="section-header">
+  <h2>File I/O</h2>
+  <span class="section-note">read, write, JSON</span>
+</div>
+
+<div class="comparison">
+  <div class="comparison-col">
+    <div class="lang-label py">Python</div>
+    <pre><code class="language-python">with open("file.txt") as f:
+    content = f.read()
+
+with open("file.txt", "w") as f:
+    f.write("Hello")
+
+import json
+data = json.loads(content)
+output = json.dumps(data, indent=2)
+</code></pre>
+  </div>
+  <div class="comparison-col">
+    <div class="lang-label php">PHP</div>
+    <pre><code class="language-php">$content = file_get_contents("file.txt");
+
+file_put_contents("file.txt", "Hello");
+
+$data = json_decode($content, true);
+$output = json_encode($data, JSON_PRETTY_PRINT);
+</code></pre>
+  </div>
+</div>
+</section>
+
+<!-- ============================== -->
+<section class="section" id="errors">
+<div class="section-header">
+  <h2>Error Handling</h2>
+  <span class="section-note">try / catch / finally</span>
+</div>
+
+<div class="comparison">
+  <div class="comparison-col">
+    <div class="lang-label py">Python</div>
+    <pre><code class="language-python">try:
+    result = risky_operation()
+except ValueError as e:
+    print(f"Oops: {e}")
+except Exception as e:
+    print(f"Unknown: {e}")
+finally:
+    cleanup()
+</code></pre>
+  </div>
+  <div class="comparison-col">
+    <div class="lang-label php">PHP</div>
+    <pre><code class="language-php">try {
+    $result = riskyOperation();
+} catch (\ValueError $e) {
+    echo "Oops: {$e->getMessage()}";
+} catch (\Throwable $e) {
+    echo "Unknown: {$e->getMessage()}";
+} finally {
+    cleanup();
+}
+</code></pre>
+  </div>
+</div>
+</section>
+
+<!-- ============================== -->
+<section class="section" id="map">
+<div class="section-header">
+  <h2>Function Map</h2>
+  <span class="section-note">common operations, Python → PHP</span>
+</div>
+<div class="section-desc">
+  PHP uses standalone functions where Python uses methods or built-ins. Here's the quick translation table for the most common operations.
+</div>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th>Operation</th>
+      <th>Python</th>
+      <th>PHP</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>String length</td><td>len(s)</td><td>strlen($s)</td></tr>
+    <tr><td>String uppercase</td><td>s.upper()</td><td>strtoupper($s)</td></tr>
+    <tr><td>String lowercase</td><td>s.lower()</td><td>strtolower($s)</td></tr>
+    <tr><td>Split string</td><td>s.split(",")</td><td>explode(",", $s)</td></tr>
+    <tr><td>Join array</td><td>", ".join(items)</td><td>implode(", ", $items)</td></tr>
+    <tr><td>Trim whitespace</td><td>s.strip()</td><td>trim($s)</td></tr>
+    <tr><td>Find substring</td><td>s.find("x")</td><td>strpos($s, "x")</td></tr>
+    <tr><td>Replace substring</td><td>s.replace("a", "b")</td><td>str_replace("a", "b", $s)</td></tr>
+    <tr><td>Array length / count</td><td>len(arr)</td><td>count($arr)</td></tr>
+    <tr><td>Array push</td><td>arr.append(x)</td><td>$arr[] = $x</td></tr>
+    <tr><td>Array pop</td><td>arr.pop()</td><td>array_pop($arr)</td></tr>
+    <tr><td>Array sort (mutate)</td><td>arr.sort()</td><td>sort($arr)</td></tr>
+    <tr><td>Array reverse</td><td>arr[::-1]</td><td>array_reverse($arr)</td></tr>
+    <tr><td>Array slice</td><td>arr[1:3]</td><td>array_slice($arr, 1, 2)</td></tr>
+    <tr><td>Array merge</td><td>a + b / [*a, *b]</td><td>array_merge($a, $b)</td></tr>
+    <tr><td>Array keys</td><td>d.keys()</td><td>array_keys($d)</td></tr>
+    <tr><td>Array values</td><td>d.values()</td><td>array_values($d)</td></tr>
+    <tr><td>Key exists</td><td>"k" in d</td><td>array_key_exists("k", $d)</td></tr>
+    <tr><td>Map (functional)</td><td>map(f, arr)</td><td>array_map($fn, $arr)</td></tr>
+    <tr><td>Filter</td><td>filter(f, arr)</td><td>array_filter($arr, $fn)</td></tr>
+    <tr><td>Reduce</td><td>functools.reduce(f, arr)</td><td>array_reduce($arr, $fn)</td></tr>
+    <tr><td>Round</td><td>round(x, 2)</td><td>round($x, 2)</td></tr>
+    <tr><td>Current datetime</td><td>datetime.now()</td><td>new DateTime() / date()</td></tr>
+    <tr><td>Random integer</td><td>random.randint(1, 10)</td><td>rand(1, 10)</td></tr>
+    <tr><td>Type check</td><td>isinstance(x, int)</td><td>is_int($x)</td></tr>
+    <tr><td>Dump / debug</td><td>print(x)</td><td>var_dump($x)</td></tr>
+  </tbody>
+</table>
+</div>
+</section>
+
+<!-- ============================== -->
+<section class="section" id="web">
+<div class="section-header">
+  <h2>Web Context</h2>
+  <span class="section-note">superglobals, routing, Laravel notes</span>
+</div>
+<div class="section-desc">
+  Python web frameworks (Flask, Django) use explicit request objects. PHP has superglobals — predefined arrays available everywhere. If you're learning PHP for <strong>Laravel</strong> (your project), you'll use Laravel's request wrapper instead, but the underlying superglobals are good to know.
+</div>
+
+<div class="comparison">
+  <div class="comparison-col">
+    <div class="lang-label py">Flask / Django</div>
+    <pre><code class="language-python"># Flask
+from flask import request
+name = request.args.get("name")
+data = request.form.get("email")
+
+# Session
+session["user_id"] = 42
+
+# Redirect
+return redirect("/dashboard")
+</code></pre>
+  </div>
+  <div class="comparison-col">
+    <div class="lang-label php">Laravel / Raw</div>
+    <pre><code class="language-php">// Laravel
+$name = $request->query("name");
+$data = $request->input("email");
+
+// Raw PHP
+$name = $_GET["name"] ?? null;
+$data = $_POST["email"] ?? null;
+$_SESSION["user_id"] = 42;
+header("Location: /dashboard");
+</code></pre>
+  </div>
+</div>
+
+<div class="tip">
+  <strong>Laravel-specific:</strong> Since your project uses Laravel + Inertia, you'll work with Eloquent models (PHP's ORM), Blade or Inertia templates, and Artisan CLI. The <code>$</code> sigil, <code>-&gt;</code> for methods/properties, and <code>use</code> for imports are the daily bread. Most of your logic lives in controllers and Eloquent models — think of them like Flask blueprints + SQLAlchemy models combined.
+</div>
+</section>
+
+<footer style="margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text-muted);">
+  Built for the samm26 project. Python and PHP are registered trademarks of their respective owners.
+</footer>
+
+</div>
+
+<script>hljs.highlightAll();</script>
+</body>
+</html>
