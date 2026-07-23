@@ -82,4 +82,6 @@
 - Laravel
 - Inertia (laravel svelte template)
 - TailwindCSS
-- test
+- 
+# design testing
+- read DESIGN.md file
